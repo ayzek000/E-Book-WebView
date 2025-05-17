@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4F46E5">
+    <title>DressLine - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .offline-container {
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .icon-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #4F46E5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            margin-bottom: 30px;
+        }
+        
+        .icon-container svg {
+            width: 50px;
+            height: 50px;
+            color: #FFFFFF;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #E0E0E0;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .retry-button {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .retry-button:hover {
+            background-color: #4338CA;
+        }
+        
+        .cached-content {
+            margin-top: 40px;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        
+        .cached-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+        
+        .cached-list {
+            list-style: none;
+            width: 100%;
+        }
+        
+        .cached-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cached-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            color: #4ADE80;
+        }
+        
+        .cached-item-text {
+            font-size: 14px;
+            color: #E0E0E0;
+        }
+        
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #F9FAFB;
+                color: #111827;
+            }
+            
+            .title {
+                color: #111827;
+                text-shadow: 0 0 10px rgba(79, 70, 229, 0.2);
+            }
+            
+            .message {
+                color: #6B7280;
+            }
+            
+            .cached-title {
+                color: #111827;
+            }
+            
+            .cached-item {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            
+            .cached-item-text {
+                color: #6B7280;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="icon-container">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+        </div>
+        
+        <h1 class="title">Internet bilan aloqa yo'q</h1>
+        <p class="message">Siz hozir offline rejimdasiz. Internet aloqasini tekshiring va qayta urinib ko'ring.</p>
+        
+        <button class="retry-button" id="retryButton">Qayta urinish</button>
+        
+        <div class="cached-content">
+            <h2 class="cached-title">Keshda saqlangan materiallar</h2>
+            <ul class="cached-list" id="cachedList">
+                <!-- Здесь будут отображаться кэшированные элементы -->
+                <li class="cached-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                    <span class="cached-item-text">DressLine asosiy sahifasi</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const retryButton = document.getElementById('retryButton');
+            const cachedList = document.getElementById('cachedList');
+            
+            // Обработчик кнопки повторной попытки
+            retryButton.addEventListener('click', function() {
+                window.location.href = './index.html';
+            });
+            
+            // Получение списка кэшированных ресурсов
+            if ('caches' in window) {
+                caches.open('dressline-cache-v1')
+                    .then(cache => {
+                        cache.keys()
+                            .then(requests => {
+                                // Очищаем список
+                                cachedList.innerHTML = '';
+                                
+                                // Если есть кэшированные ресурсы
+                                if (requests.length > 0) {
+                                    requests.forEach(request => {
+                                        // Создаем элемент списка для каждого кэшированного ресурса
+                                        const listItem = document.createElement('li');
+                                        listItem.className = 'cached-item';
+                                        
+                                        // Определяем тип иконки в зависимости от URL
+                                        let iconPath = '';
+                                        if (request.url.endsWith('.html')) {
+                                            iconPath = '<path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline>';
+                                        } else if (request.url.endsWith('.css')) {
+                                            iconPath = '<path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path><path d="M2 20h20"></path><path d="M14 12v.01"></path>';
+                                        } else if (request.url.endsWith('.js')) {
+                                            iconPath = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 12a1 1 0 0 0-1 1v1a1 1 0 0 1-1 1"></path><path d="M16 12a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1"></path>';
+                                        } else {
+                                            iconPath = '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>';
+                                        }
+                                        
+                                        // Добавляем иконку
+                                        const icon = document.createElement('svg');
+                                        icon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                                        icon.setAttribute('viewBox', '0 0 24 24');
+                                        icon.setAttribute('fill', 'none');
+                                        icon.setAttribute('stroke', 'currentColor');
+                                        icon.setAttribute('stroke-width', '2');
+                                        icon.setAttribute('stroke-linecap', 'round');
+                                        icon.setAttribute('stroke-linejoin', 'round');
+                                        icon.innerHTML = iconPath;
+                                        
+                                        // Добавляем текст
+                                        const text = document.createElement('span');
+                                        text.className = 'cached-item-text';
+                                        
+                                        // Получаем имя файла из URL
+                                        const url = new URL(request.url);
+                                        const fileName = url.pathname.split('/').pop() || 'index.html';
+                                        text.textContent = fileName;
+                                        
+                                        // Добавляем элементы в список
+                                        listItem.appendChild(icon);
+                                        listItem.appendChild(text);
+                                        cachedList.appendChild(listItem);
+                                    });
+                                } else {
+                                    // Если нет кэшированных ресурсов
+                                    const listItem = document.createElement('li');
+                                    listItem.className = 'cached-item';
+                                    listItem.textContent = 'Keshda saqlangan materiallar yo\'q';
+                                    cachedList.appendChild(listItem);
+                                }
+                            });
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4F46E5">
+    <meta name="description" content="DressLine - Elektron kitobga xush kelibsiz!">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DressLine Mobile</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #121212;
+            color: #FFFFFF;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: fixed;
+        }
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .splash-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+            max-width: 400px;
+        }
+        
+        .shield-container {
+            margin-bottom: 30px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        .shield {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #4F46E5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+            border: 1px solid rgba(79, 70, 229, 0.3);
+            position: relative;
+        }
+        
+        .shield svg {
+            width: 50px;
+            height: 50px;
+            color: #FFFFFF;
+        }
+        
+        .check-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            background-color: #1E1E1E;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(74, 222, 128, 0.5);
+            box-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .check-badge.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .check-badge svg {
+            width: 20px;
+            height: 20px;
+            color: #4ADE80;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+        }
+        
+        .message-container {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .message {
+            font-size: 14px;
+            color: #E0E0E0;
+            text-align: center;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background-color: #2A2A2A;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: #4F46E5;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+        
+        .security-icons {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            background-color: #2A2A2A;
+            transition: background-color 0.3s ease;
+        }
+        
+        .icon-circle svg {
+            width: 20px;
+            height: 20px;
+            color: #666666;
+            transition: color 0.3s ease;
+        }
+        
+        .icon-circle.active {
+            background-color: #4F46E5;
+        }
+        
+        .icon-circle.success {
+            background-color: #4ADE80;
+        }
+        
+        .icon-circle.active svg, 
+        .icon-circle.success svg {
+            color: #FFFFFF;
+        }
+        
+        .webview-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        .error-container.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .error-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .error-message {
+            font-size: 16px;
+            color: #E0E0E0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .retry-button {
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .retry-button:hover {
+            background-color: #4338CA;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: #F9FAFB;
+                color: #111827;
+            }
+            
+            .splash-screen {
+                background-color: #F9FAFB;
+            }
+            
+            .title {
+                color: #111827;
+                text-shadow: 0 0 10px rgba(79, 70, 229, 0.2);
+            }
+            
+            .message-container {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+            
+            .message {
+                color: #6B7280;
+            }
+            
+            .error-container {
+                background-color: #F9FAFB;
+            }
+            
+            .error-title {
+                color: #111827;
+            }
+            
+            .error-message {
+                color: #6B7280;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <!-- Анимированный щит безопасности -->
+            <div class="shield-container">
+                <div class="shield">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <div class="check-badge" id="checkBadge">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Текст загрузки -->
+            <h1 class="title">DressLine</h1>
+            <div class="message-container">
+                <p class="message" id="loadingMessage">Xavfsizlik tekshirilmoqda...</p>
+            </div>
+            
+            <!-- Индикатор прогресса -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <!-- Иконки безопасности -->
+            <div class="security-icons">
+                <div class="icon-circle" id="lockIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                
+                <div class="icon-circle" id="shieldIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                
+                <div class="icon-circle" id="checkIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="webview-container" id="webviewContainer">
+        <iframe id="webview" src="about:blank" allow="fullscreen; camera; microphone; geolocation"></iframe>
+    </div>
+    
+    <div class="error-container" id="errorContainer">
+        <h2 class="error-title">Internet bilan aloqa yo'q</h2>
+        <p class="error-message">Iltimos, internet aloqangizni tekshiring va qayta urinib ko'ring.</p>
+        <button class="retry-button" id="retryButton">Qayta urinish</button>
+    </div>
+    
+    <script>
+        // Регистрация Service Worker для PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('splashScreen');
+            const webviewContainer = document.getElementById('webviewContainer');
+            const webview = document.getElementById('webview');
+            const errorContainer = document.getElementById('errorContainer');
+            const retryButton = document.getElementById('retryButton');
+            const progressBar = document.getElementById('progressBar');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const lockIcon = document.getElementById('lockIcon');
+            const shieldIcon = document.getElementById('shieldIcon');
+            const checkIcon = document.getElementById('checkIcon');
+            const checkBadge = document.getElementById('checkBadge');
+            
+            // URL вашего веб-приложения
+            // Для локальной разработки используйте IP-адрес вашего компьютера
+            // Для продакшена используйте URL вашего хостинга
+            // Если ваше основное приложение размещено на том же домене, но в поддиректории
+            const webAppUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                ? window.location.protocol + '//' + window.location.hostname + ':5173' 
+                : window.location.protocol + '//' + window.location.host + '/app'; // Замените '/app' на путь к вашему веб-приложению
+            
+            // Анимация загрузки
+            setTimeout(() => {
+                progressBar.style.width = '50%';
+                loadingMessage.textContent = 'Ma\'lumotlar shifrlash...';
+                lockIcon.classList.add('active');
+            }, 800);
+            
+            setTimeout(() => {
+                progressBar.style.width = '75%';
+                loadingMessage.textContent = 'Xavfsiz ulanish o\'rnatilmoqda...';
+                shieldIcon.classList.add('active');
+            }, 1600);
+            
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+                loadingMessage.textContent = 'Xavfsizlik tasdiqlandi!';
+                checkIcon.classList.add('success');
+                checkBadge.classList.add('show');
+            }, 2200);
+            
+            // Показываем WebView после анимации
+            setTimeout(() => {
+                webview.src = webAppUrl;
+                splashScreen.style.opacity = '0';
+                webviewContainer.style.opacity = '1';
+                
+                // Полностью скрываем SplashScreen после анимации
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                }, 500);
+            }, 3000);
+            
+            // Обработка ошибок загрузки
+            webview.onerror = function() {
+                showError();
+            };
+            
+            // Обработка ошибок при загрузке iframe
+            webview.onload = function() {
+                try {
+                    // Проверяем, загрузился ли iframe
+                    if (webview.contentWindow.document.body) {
+                        // Iframe загрузился успешно
+                        // Сохраняем информацию о последнем успешном подключении
+                        localStorage.setItem('lastSuccessfulConnection', new Date().toISOString());
+                    }
+                } catch (e) {
+                    // Возникла ошибка при доступе к содержимому iframe (CORS или другая ошибка)
+                    showError();
+                }
+            };
+            
+            // Обработка состояния сети
+            window.addEventListener('online', function() {
+                // Если пользователь снова в сети, обновляем страницу
+                if (errorContainer.classList.contains('show')) {
+                    webview.src = webAppUrl;
+                    errorContainer.classList.remove('show');
+                }
+            });
+            
+            window.addEventListener('offline', function() {
+                // Если пользователь не в сети, показываем ошибку
+                showError();
+            });
+            
+            // Функция для отображения ошибки
+            function showError() {
+                errorContainer.classList.add('show');
+                
+                // Показываем время последнего успешного подключения
+                const lastConnection = localStorage.getItem('lastSuccessfulConnection');
+                if (lastConnection) {
+                    const lastConnectionDate = new Date(lastConnection);
+                    const lastConnectionElement = document.createElement('p');
+                    lastConnectionElement.className = 'error-last-connection';
+                    lastConnectionElement.textContent = 'Oxirgi muvaffaqiyatli ulanish: ' + 
+                        lastConnectionDate.toLocaleDateString('uz-UZ') + ' ' + 
+                        lastConnectionDate.toLocaleTimeString('uz-UZ');
+                    
+                    // Добавляем элемент после сообщения об ошибке
+                    const errorMessage = document.querySelector('.error-message');
+                    if (errorMessage && !document.querySelector('.error-last-connection')) {
+                        errorMessage.parentNode.insertBefore(lastConnectionElement, errorMessage.nextSibling);
+                    }
+                }
+            }
+            
+            // Кнопка повторной попытки
+            retryButton.addEventListener('click', function() {
+                errorContainer.classList.remove('show');
+                webview.src = webAppUrl;
+            });
+        });
+    </script>
+</body>
+</html>

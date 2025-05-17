@@ -1,0 +1,19 @@
+Здесь должны быть размещены иконки для PWA следующих размеров:
+- icon-72x72.png
+- icon-96x96.png
+- icon-128x128.png
+- icon-144x144.png
+- icon-152x152.png
+- icon-192x192.png
+- icon-384x384.png
+- icon-512x512.png
+- maskable-icon.png (196x196 с дополнительным пространством вокруг логотипа)
+
+Вы можете создать эти иконки с помощью онлайн-инструментов, таких как:
+1. https://app-manifest.firebaseapp.com/
+2. https://maskable.app/editor
+3. https://www.pwabuilder.com/
+
+Или с помощью графических редакторов, таких как Adobe Photoshop, GIMP или Figma.
+
+Рекомендуемый цвет фона для иконок: #4F46E5 (индиго)
