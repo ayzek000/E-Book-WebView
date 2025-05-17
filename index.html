@@ -394,10 +394,10 @@
             // URL вашего веб-приложения
             // Для локальной разработки используйте IP-адрес вашего компьютера
             // Для продакшена используйте URL вашего хостинга
-            // Если ваше основное приложение размещено на том же домене, но в поддиректории
+            // Используем оффлайн-страницу, чтобы показать демонстрацию PWA
             const webAppUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
                 ? window.location.protocol + '//' + window.location.hostname + ':5173' 
-                : window.location.protocol + '//' + window.location.host + '/app'; // Замените '/app' на путь к вашему веб-приложению
+                : './offline.html'; // Используем оффлайн-страницу для демонстрации
             
             // Анимация загрузки
             setTimeout(() => {
